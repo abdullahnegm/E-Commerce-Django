@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="table-responsive mt-5">
+    <table class="table mt-3">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Item</th>
+          <th scope="col">Price</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Total Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order_item in orders.items.all %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ order_item.item.title }}</td>
+            <td>{{ order_item.get_final_price }}</td>
+            <td> <a href="{% url 'ecommerce:remove-single-cart' order_item.item.slug %}"><i class="fas fa-minus mr-2"></i></a>
+            {{ order_item.quantity }}
+            <a href="{% url 'ecommerce:add-to-cart' order_item.item.slug %}"><i style="color: red;" class="fas fa-plus ml-2"></i></a></td>
+            <td>{{ order_item.get_total_price }} <a href="{% url 'ecommerce:remove-from-cart' order_item.item.slug %}">
+            <i style="color: red;" class="fas fa-trash float-right"></i></a>
+            </td>
+        </tr>    
+        {% empty %}
+        <tr>
+          <td colspan="5">Your Cart Is Empty</td>
+        </tr>
+        <tr>
+          <td colspan="3"><a href="{% url 'ecommerce:home' %}" class="btn btn-primary float-right">Continue Shopping</a></td>
+        </tr>
+        {% endfor %}
+        {% if orders.get_total_price %}
+        <tr>
+          <td colspan="4"><b> Total Price </b></td>
+          <td><b> {{ orders.get_total_price }} </b></td>
+        </tr>
+        <tr>
+            <td colspan="5">
+              <a href="{% url 'ecommerce:home' %}" class="btn btn-primary float-right">Continue Shopping</a>
+              <a href="{% url 'ecommerce:check-out' %}" class="btn btn-warning float-right">Procceed to Check out</a>
+            </td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}
